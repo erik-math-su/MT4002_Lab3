@@ -1,0 +1,67 @@
+```{r}
+bd_process <- function(lambda, mu, initial_state = 0, steps = 100) {
+  time_now <- 0
+  state_now <- initial_state
+  # Dessa vektorer ska byggas på i loopen nedan
+  time <- 0
+  state <- initial_state
+  for (i in 1:steps) {
+    # ?
+    if (state_now == 3) {
+      lambda_now <- 0
+    } else {
+      lambda_now <- lambda
+    }
+    # ?
+    if (state_now == 0) {
+      mu_now <- 0
+    } else {
+      mu_now <- mu
+    }
+    # ?
+    time_to_transition <- ...
+    # ?
+    if (...) {
+      state_now <- state_now - 1
+    } else {
+      state_now <- state_now + 1
+    }
+    time_now <- time_now + time_to_transition # vad är time now?
+    time <- c(time, time_now) # vad innehåller vektorn time?
+    state <- c(state, state_now) # vad innehåller vektorn state?
+}
+  # Returnera en lista med de två vektorerna tid och state
+  list(time = time, state = state)
+}
+```
+
+
+# Uppgift 1
+
+Tiden är exponentialfödelad med parameter $\lambda$ och $\mu$ döds. \\
+$X(t) \sim Po(\lambda t)$. (SATS 5.1) \\
+Sannolikheten för att gå upp ett steg ges av $P_{i, i+1} = \frac{\lambda_i}{\lambda_i + \mu_i}$. \\
+Sannolikheten för att gå ned ett steg ges av $P_{i, i-1} = \frac{\mu_i}{\mu_i + \lambda_i}$. \\
+
+$\frac{1}{6}$, $\frac{6}{7}$ \\
+$T_\lambda \sim Exp(1)$, $T_\mu \sim Exp(5)$ \\
+
+# Uppgift 2
+
+```{r}
+set.seed(950122)
+forslag1 <- bd_process(lambda = 1, mu = 5)
+# Här låter vi argumenten initial_state och steps vara på sina defaultvärden,
+# så de behöver inte anges.
+# Hämta ut vektorerna tid och state
+time1 <- forslag1$time
+state1 <- forslag1$state
+plot(stepfun(time1[-1], state1),
+  do.points = FALSE,
+  xlab = "Tid",
+  ylab = "Tillstånd",
+  main = "",
+  yaxt = "n")
+axis(2, at = c(0, 1, 2, 3), las = 2)
+```
+
