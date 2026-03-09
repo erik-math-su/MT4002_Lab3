@@ -30,11 +30,13 @@ bd_process <- function(lambda, mu, initial_state = 0, steps = 100) {
     # Tiden för tillståndbyte exp fördelad med paramterarna i uppgift 1
     time_to_transition <- rexp(1, rate = lambda_now + mu_now)
     # Om nästa hopp är serviceavslut eller ankomst
+    
     if (runif(1) < mu_now/(lambda_now + mu_now)) { # Ett tal, för vi       vill ha en händelse generarad, om den är mindre än sannolikheten       för service så sker service annars arrival (+1)
       state_now <- state_now - 1
     } else {
       state_now <- state_now + 1
     }
+    
     time_now <- time_now + time_to_transition # Tid efter nästa hopp       inträffat
     time <- c(time, time_now) # time vektorn - tidpunkter när              tillståndsbyten sker
     state <- c(state, state_now) # state vektorn - tillstånd processen     kommer till efter varje steg
@@ -58,6 +60,7 @@ $T_\lambda \sim Exp(1)$, $T_\mu \sim Exp(5)$ \\
 # Uppgift 2
 
 ### ankomst = 1, service = 5
+
 ```{r}
 set.seed(950122)
 forslag1 <- bd_process(lambda = 1, mu = 5)
@@ -73,7 +76,9 @@ plot(stepfun(time1[-1], state1),
   yaxt = "n")
 axis(2, at = c(0, 1, 2, 3), las = 2)
 ```
+
 ### ankomst = 2, service = 5
+
 ```{r}
 set.seed(950122)
 forslag2 <- bd_process(lambda = 2, mu = 5)
@@ -264,6 +269,21 @@ time2
 time3 <- proportion_in_state(3,forslag3)
 time3
 ```
+
+```{r}
+# Skapa en lista med dina simulerade processer
+processer <- list(F1 = forslag1, F2 = forslag2, F3 = forslag3)
+
+# Beräkna andelen för varje tillstånd (0-3) för varje förslag
+resultat_tabell <- sapply(processer, function(p) {
+  sapply(0:3, function(s) proportion_in_state(s, p))
+})
+
+# Snygga till namnen
+rownames(resultat_tabell) <- c("Tillstånd 0", "Tillstånd 1", "Tillstånd 2", "Tillstånd 3")
+print(resultat_tabell)
+```
+
 
 ### Kommentar:
 Högst 5% av tiden får bufferten vara full. Den är full i tillstånd 3. Så om andelen tid i tillstånd 3 är mindre eller lika med 0.05 så är det acceptabelt. Kollar vi på time_3 ser vi att förslag 1 och 2 är "acceptabla".
